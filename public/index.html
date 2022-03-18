@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>GPS Data Viewer</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A Web App created for viewing GPX files.">
+    <meta name="keywords" content="GPX">
+    <meta name="author" content="Daniel Kobko">
+    <!-- Load jquery, bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" type="text/css" href="/style.css">
+    <!-- Custom CSS End -->
+</head>
+<body>
+    <div id="wrapper">
+
+        <div id="WebUIWrapper">
+            <h1>GPX Data Viewer</h1>
+            <hr>
+            <div id="filelogwrapper">
+                <h3>File Log</h3>
+                <div id="filetablewrapper">
+                    <table id="filelog"></table>
+                </div>
+            
+                <form ref='uploadForm'
+                    id='uploadForm'
+                    action='/upload'
+                    method='post'
+                    encType="multipart/form-data">
+                <div class="form-group">
+                    <input type="file" name="uploadFile" class="btn btn-secondary">
+                    <input type='submit' value='Upload' class="btn btn-secondary">
+                </div>
+                </form>
+            </div>
+    
+            <hr>
+    
+            <div id="GPXviewwrapper">
+                <h3>GPX View</h3>
+        
+                <form ref='dropdownform' id='dropdownform'>
+                    <div id="dropdownwrapper">
+                        <div class="form-group">
+                            <select name="filedropdown" id="filedropdown">
+                                <option value="notafile"></option>
+                            </select> 
+                        </div>
+                    </div>
+                </form>
+                
+                <div id="gpxview">No file selected.</div>
+    
+                <div id="gpxviewbuttons">
+                    <hr>
+                    <h5>Additional Functions for Components</h5>
+                    <form ref='rename-button' id='rename-button'>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="entryBox" value="" placeholder="Enter a new name ...">
+                        </div>
+                        <div class="form-group">
+                            <input type='submit' class="btn btn-secondary" value="Rename">
+                        </div>
+                    </form>
+                    <div id="newname"></div>
+    
+                    <form ref='otherdata-button' id='otherdata-button'>
+                        <div class="form-group">
+                            <input type='submit' class="btn btn-secondary" value="Show Other Data">
+                        </div>
+                    </form>
+                    
+                    <form ref='newroute-button' id='newroute-button'>
+                        <div class="form-group">
+                            <input type='submit' class="btn btn-secondary" value="+ New Route">
+                        </div>
+                    </form>
+    
+                    <div id="newRoute"></div>
+    
+                    <hr>
+    
+                    <h5>Create a new GPX File</h5>
+                    <form ref='addgpx-button' id='addgpx-button'>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="Creator" value="" placeholder="Creator ...">
+                            <input type="text" class="form-control" id="Version" value="" placeholder="Version ...">
+                            <input type="text" class="form-control" id="newGPXFile" value="" placeholder="Filename ...">
+                        </div>
+                        <div class="form-group">
+                            <input type='submit' class="btn btn-secondary" value="+ Create GPX File">
+                        </div>
+                    </form>
+                    <div id="creationSuccess"></div>
+                    
+                    <hr>
+                    
+                    <h5>Find all Routes & Tracks Between </h5>
+                    <form ref='between-button' id='between-button'>
+                        <div class="form-group">
+                            <p>Point 1</p>
+                            <input type="text" class="form-control" id="longitude1" value="" placeholder="Longitude 1 ...">
+                            <input type="text" class="form-control" id="latitude1" value="" placeholder="Latitude 1 ...">
+                            <p>Point 2</p>
+                            <input type="text" class="form-control" id="longitude2" value="" placeholder="Longitude 2 ...">
+                            <input type="text" class="form-control" id="latitude2" value="" placeholder="Latitude 2 ...">
+                            <p>Tolerance</p>
+                            <input type="text" class="form-control" id="delta" value="" placeholder="Delta ...">
+                        </div>
+                        <div class="form-group">
+                            <input type='submit' class="btn btn-secondary" value="Find">
+                        </div>
+                    </form>
+                    <div id="componentsBetween">When you press find, routes and tracks will appear here</div>
+                    <hr>
+                    <div id=dataBaseUI class="invisible">
+                        <h5>DataBase Functionality</h5>
+                        <form ref='store-all-button' id='store-all-button' class="invisible">
+                            <div class="form-group">
+                                <input type='submit' class="btn btn-secondary" value="Store All Data">
+                            </div>
+                        </form>
+                        <form ref='clear-all-button' id='clear-all-button'>
+                            <div class="form-group">
+                                <input type='submit' class="btn btn-secondary" value="Clear All Data">
+                            </div>
+                        </form>
+                        <form ref='display-status-button' id='display-status-button'>
+                            <div class="form-group">
+                                <input type='submit' class="btn btn-secondary" value="Display Database Status">
+                            </div>
+                        </form>
+                        <form ref='execute-query-button' id='execute-query-button'>
+                            <div class="form-group">
+                                <input type='submit' class="btn btn-secondary" value="Make Query">
+                            </div>
+                        </form>
+                        <div id="queryWrapper"></div>
+                    </div>
+                </div>
+            </div>  
+            <div id="loginUIWrapper">
+                <div id="loginBox">
+                    <h3 id="loginHeader">Login</h3>
+                    <form ref='login-button' id='login-button'>
+                        <div class="form-group">
+                            <p>Username</p>
+                            <input type="text" class="form-control" id="un" value="" placeholder="John Doe...">
+                        </div>
+                        <div class="form-group">
+                            <p>Database Name</p>
+                            <input type="text" class="form-control" id="dbn" value="" placeholder="DBName...">
+                        </div>
+                        <div class="form-group">
+                            <p>Password</p>
+                            <input type="text" class="form-control" id="pwd" value="" placeholder="************">
+                        </div>
+                        <div class="form-group">
+                            <input type='submit' class="btn btn-secondary" value="Login">
+                        </div>
+                    </form>
+                </div>
+            </div>     
+        </div>
+    </div>
+    
+    <!-- Leave me at the bottom of body -->
+    <script src="/index.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
