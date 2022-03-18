@@ -1,3 +1,6 @@
+# Note
+This code currently will not run straight from the pull and needs some tweaking, as it only worked on my school's servers. I will be working towards making this program possible to use again in the near future.
+
 # CIS*2750 Assignment 3 - Stub
 
 For this assignment, and web development in general you will need to exercise your "google-fu", your skill in using a search engine to find answers to problems.
